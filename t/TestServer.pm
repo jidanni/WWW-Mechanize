@@ -7,6 +7,8 @@ use Test::More;
 use HTTP::Server::Simple::CGI;
 use base qw( HTTP::Server::Simple::CGI );
 
+use Socket ();
+
 my $dispatch_table = {};
 
 =head1 OVERLOADED METHODS
@@ -24,7 +26,14 @@ sub new {
     if ( !$port ) {
         $port = int(rand(20000)) + 20000;
     }
-    my $self = $class->SUPER::new( $port );
+
+    my $family = Socket::AF_INET;
+    my ($err, $res) = Socket::getaddrinfo "", "0";
+    if (!$err && $res) {
+        $family = $res->{family};
+    }
+
+    my $self = $class->SUPER::new( $port, $family );
 
     my $root = $self->root;
 
@@ -108,7 +117,7 @@ sub background {
 sub hostname {
     my $self = shift;
 
-    return '127.0.0.1';
+    return 'localhost';
 }
 
 sub root {

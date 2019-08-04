@@ -32,7 +32,6 @@ sub send_cookies {
             -cookie => $cgi->cookie(
                 -name    => 'my_cookie',
                 -value   => "Cookie #$ncookies",
-                -domain  => '127.0.0.1',
                 -path    => '/',
                 -expires => '+1h',
                 -secure  => 0,
@@ -125,5 +124,5 @@ is( $nprocesses, 1, 'Signaled the child process' );
 sub cookieval {
     my $mech = shift;
 
-    return uri_unescape( $mech->cookie_jar->{COOKIES}{'127.0.0.1'}{'/'}{'my_cookie'}[1] );
+    return uri_unescape( $mech->cookie_jar->{COOKIES}{'localhost.local'}{'/'}{'my_cookie'}[1] );
 }
